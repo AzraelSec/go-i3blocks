@@ -1,0 +1,12 @@
+# Debug Widget
+[debug]
+_state={"value":"0"}
+command=./goscripts/debug
+interval=1
+format=json
+
+# Battery indicator
+[battery]
+command=./goscripts/battery
+interval=1
+format=json
