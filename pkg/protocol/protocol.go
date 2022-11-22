@@ -21,6 +21,27 @@ type MarkupEngine string
 
 type State map[string]string
 
+func GetState() (State, bool) {
+	raw, ok := os.LookupEnv(STATE_ENV_NAME)
+	if !ok {
+		return make(State), false
+	}
+
+	state := map[string]string{}
+	if err := json.Unmarshal([]byte(raw), &state); err != nil {
+		return make(State), false
+	}
+
+	return state, true
+}
+
+func (s State) GetValue(k string) string {
+	if v, has := s[k]; has {
+		return v
+	}
+	return ""
+}
+
 type I3BlocksOutput struct {
 	FullText            string       `json:"full_text,omitempty"`
 	ShortText           string       `json:"short_text,omitempty"`
@@ -40,20 +61,6 @@ type I3BlocksOutput struct {
 	SeparatorBlockWidth int          `json:"separator_block_width,omitempty"`
 	Markup              MarkupEngine `json:"markup,omitempty"`
 	State               State        `json:"_state,omitempty"`
-}
-
-func GetState() (State, bool) {
-	raw, ok := os.LookupEnv(STATE_ENV_NAME)
-	if !ok {
-		return make(State), false
-	}
-
-	state := map[string]string{}
-	if err := json.Unmarshal([]byte(raw), &state); err != nil {
-		return make(State), false
-	}
-
-	return state, true
 }
 
 func (o *I3BlocksOutput) MarshalJSON() ([]byte, error) {
