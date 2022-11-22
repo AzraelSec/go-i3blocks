@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -18,13 +17,6 @@ const (
 )
 
 func main() {
-	file, err := os.Open(BASE_PATH)
-	if err != nil {
-		fmt.Printf("Directory %s does not exist", BASE_PATH)
-		return
-	}
-	defer file.Close()
-
 	info, err := batteryStat(BASE_PATH)
 	if err != nil {
 		fmt.Printf("Directory %s does not exist", BASE_PATH)
@@ -70,12 +62,7 @@ func main() {
 		FullText: fmt.Sprintf("%s%d%%", battery.Icon(), battery.Percentage()),
 		Color:    "#fabd2f",
 	}
-	json, err := json.Marshal(output)
-	if err != nil {
-		fmt.Print("Error")
-		return
-	}
-	fmt.Println(string(json))
+	protocol.PrintBlock(output)
 }
 
 func batteryStat(path string) (*os.FileInfo, error) {
